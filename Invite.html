@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Yusra & Shoaib — Nikkah Invitation</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Cormorant+Garamond:wght@400;500;600&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+<style>
+/* ───────── THEME ───────── */
+:root {
+  --ivory: #fdfaf5;
+  --champagne: #ede4d6;
+  --gold: #d4b78a;
+  --deep-gold: #b8975e;
+  --charcoal: #2f241a;
+  --soft-brown: #766a5e;
+  --glass: rgba(255, 255, 255, 0.68);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html, body {
+  height:100%;
+  font-family:'Lora', serif;
+  background: linear-gradient(180deg, var(--ivory), #f8f3ea);
+  color: var(--charcoal);
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  overscroll-behavior-y: none; /* Helps prevent bounce/overscroll */
+}
+
+/* Scroll snapping container + lock at end */
+.scroll-container {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  overscroll-behavior-y: contain; /* Prevents pull-to-refresh or overscroll bounce */
+  -webkit-overflow-scrolling: touch; /* Smooth iOS scrolling */
+}
+
+section {
+  min-height: 100vh;
+  max-height: 100vh; /* Prevents section from growing too tall */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 6vh 6vw 8vh; /* Reduced top padding, more bottom breathing room */
+  text-align: center;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  overflow-y: auto; /* Safety: if content is still too much, allow internal scroll */
+}
+
+/* Last section gets extra bottom padding to feel finished */
+section:last-child {
+  padding-bottom: 10vh;
+}
+
+/* Islamic decorative border */
+body::after {
+  content:"";
+  position:fixed;
+  inset:20px;
+  border:1.5px solid rgba(212,183,138,.25);
+  pointer-events:none;
+  z-index:1000;
+  border-radius:18px;
+}
+
+/* Subtle lantern glow */
+body::before {
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(212,183,138,.12), transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(212,183,138,.09), transparent 50%);
+  animation: ambient 16s ease-in-out infinite;
+  z-index: -2;
+}
+
+@keyframes ambient { 0%,100%{opacity:.8;} 50%{opacity:1;} }
+
+/* Floating light rays */
+.light-ray {
+  position:fixed;
+  width:2px;
+  height:140px;
+  background:linear-gradient(to bottom, rgba(212,183,138,.4), transparent);
+  opacity:.18;
+  animation:floatRay 14s linear infinite;
+  z-index:-1;
+}
+
+@keyframes floatRay { from{transform:translateY(100vh);} to{transform:translateY(-180px);} }
+
+/* Titles & content */
+h1 {
+  font-family:'Parisienne', cursive;
+  font-size: clamp(4.5rem, 13vw, 7.5rem);
+  background: linear-gradient(90deg, #d4b78a, #fff8e8, #d4b78a);
+  background-size: 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 7s linear infinite;
+  margin-bottom: 2vh;
+}
+
+@keyframes shimmer { 0%{background-position:200% center;} 100%{background-position:0% center;} }
+
+h2 {
+  font-family:'Cormorant Garamond', serif;
+  font-size: clamp(2.6rem, 6.5vw, 4rem);
+  color: var(--deep-gold);
+  margin-bottom: 4vh;
+}
+
+.names {
+  font-family:'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 5.5vw, 3rem);
+  margin-bottom: 4vh;
+}
+
+.tagline {
+  font-size: clamp(1.2rem, 3.2vw, 1.7rem);
+  max-width: 780px;
+  line-height: 1.6;
+  margin-bottom: 4vh;
+}
+
+.content {
+  max-width: 700px;
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: var(--soft-brown);
+  margin-bottom: 3vh;
+}
+
+/* Map */
+iframe {
+  width: 100%;
+  max-width: 800px;
+  height: 420px;
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0 12px 40px rgba(0,0,0,.1);
+}
+
+/* RSVP Form */
+form {
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 4vh 5vw;
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8vh;
+  box-shadow: 0 12px 40px rgba(0,0,0,.08);
+}
+
+input, select {
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(212,183,138,.35);
+  font-size: 1.05rem;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(212,183,138,.18);
+}
+
+label { font-size: 1.05rem; color: var(--soft-brown); margin-bottom: 0.5vh; display: block; }
+
+/* Button */
+button {
+  background: linear-gradient(135deg, var(--gold), var(--deep-gold));
+  border: none;
+  padding: 15px;
+  border-radius: 999px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: .3s;
+}
+
+button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(212,183,138,.4);
+}
+
+#message {
+  margin-top: 3vh;
+  min-height: 2.5em;
+  font-size: 1.1rem;
+}
+
+.success { color: #5a7a4e; font-weight: 500; }
+
+/* Fade-in */
+.fade-in {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: 1.2s ease;
+}
+
+.visible {
+  opacity: 1;
+  transform: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="scroll-container">
+
+  <section>
+    <h1 class="fade-in">Y&S</h1>
+    <div class="names fade-in">Yusra & Shoaib</div>
+    <div class="tagline fade-in">
+      In the name of Allah, the Most Merciful, the Most Compassionate.<br><br>
+      With grateful hearts, we invite you to witness our sacred Nikkah and celebrate this blessed beginning.
+    </div>
+  </section>
+
+  <section>
+    <h2 class="fade-in">Wedding Details</h2>
+    <div class="content fade-in">
+      Saturday, 01 March 2026<br>
+      Nikkah at 4:00 PM<br>
+      Reception from 5:00 PM<br><br>
+      <strong>Nour Venues</strong><br>
+      62 Soofie Saheb Dr, Riverside<br>
+      Durban, 4051<br>
+      KwaZulu-Natal, South Africa
+    </div>
+
+    <iframe class="fade-in"
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3573.0!2d31.032243614978!3d-29.805797181994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1ddfe0e5b5b5b5b5%3A0x0!2s62+Soofie+Saheb+Dr%2C+Riverside%2C+Durban%2C+4051%2C+South+Africa!5e0!3m2!1sen!2sza!4v1730000000000!5m2!1sen!2sza"
+      allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+  </section>
+
+  <section>
+    <h2 class="fade-in">A Blessed Reminder</h2>
+    <div class="content fade-in" style="font-style:italic; max-width: 680px;">
+      “And among His signs is that He created for you spouses from among yourselves that you may find tranquility in them; and He placed between you affection and mercy.”<br><br>
+      — Surah Ar-Rum 30:21
+    </div>
+  </section>
+
+  <section>
+    <h2 class="fade-in">Please RSVP</h2>
+    <div class="content fade-in">
+      Your response is important to us for seating, catering, and special arrangements.<br>
+      Kindly reply at your earliest convenience, Insha'Allah.
+    </div>
+
+    <form id="rsvpForm" class="fade-in">
+      <input type="text" id="name" placeholder="Your Name(s)" required>
+      <select id="attendance" required>
+        <option value="">Will you attend?</option>
+        <option value="yes">Yes, Insha'Allah</option>
+        <option value="no">Regretfully unable</option>
+      </select>
+      <label for="guests">Number of guests (including yourself):</label>
+      <input type="number" id="guests" min="1" max="10" value="1" required>
+      <button type="submit">Send RSVP</button>
+    </form>
+
+    <div id="message"></div>
+  </section>
+
+</div>
+
+<script>
+// Floating light rays
+for(let i=0; i<10; i++){
+  const ray = document.createElement("div");
+  ray.className = "light-ray";
+  ray.style.left = Math.random()*100 + "vw";
+  ray.style.animationDuration = 10 + Math.random()*12 + "s";
+  ray.style.animationDelay = Math.random()*5 + "s";
+  document.body.appendChild(ray);
+}
+
+// Reveal on scroll
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("visible");
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll(".fade-in").forEach(el => observer.observe(el));
+
+// RSVP + Confetti
+document.getElementById("rsvpForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  const attendance = document.getElementById("attendance").value;
+  const message = document.getElementById("message");
+  message.className = "";
+  
+  if (attendance === "yes") {
+    confetti({
+      particleCount: 220,
+      spread: 110,
+      colors: ["#d4b78a", "#b8975e", "#ffffff", "#ede4d6"]
+    });
+    message.classList.add("success");
+    message.textContent = "Jazakum Allahu Khayran ✨ May Allah place barakah in this union. We look forward to celebrating together.";
+  } else {
+    message.textContent = "Jazakum Allahu Khayran for your response. Please keep us in your duas.";
+  }
+});
+
+// Lock scrolling past the last section
+const container = document.querySelector('.scroll-container');
+let isAtBottom = false;
+
+container.addEventListener('scroll', () => {
+  const atBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 10;
+  isAtBottom = atBottom;
+});
+
+container.addEventListener('wheel', (e) => {
+  if (isAtBottom && e.deltaY > 0) {
+    e.preventDefault();
+  }
+}, { passive: false });
+
+container.addEventListener('touchmove', (e) => {
+  if (isAtBottom) {
+    const touch = e.touches[0];
+    if (touch.clientY < previousTouchY) { // scrolling down
+      e.preventDefault();
+    }
+  }
+  previousTouchY = e.touches[0].clientY;
+}, { passive: false });
+
+let previousTouchY = 0;
+</script>
+
+</body>
+</html>
