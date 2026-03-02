@@ -285,7 +285,7 @@ document.querySelectorAll(".fade-in").forEach(el => observer.observe(el));
 // ============================
 const form = document.getElementById("rsvpForm");
 const messageEl = document.getElementById("message");
-const endpoint = "https://script.google.com/macros/s/AKfycbyGBGo1ttUWJGa7T95r6qUg7hYb-J4gkHuJoBhwRlRPa4QFgSEQKefIBwT_FCfqFG7h/exec";
+const endpoint = "https://script.google.com/macros/s/AKfycbzth6WaMNwdiGIl_Ra6CsqEbsPP0smLu7eooNBJowvAQafVXrrmKapOVcXayXAkjDrQ/exec"; 
 
 form.addEventListener("submit", async function(e) {
   e.preventDefault();
@@ -328,6 +328,7 @@ form.addEventListener("submit", async function(e) {
     } else {
       messageEl.textContent = "Something went wrong. Please try again.";
     }
+
   } catch (error) {
     messageEl.textContent = "Network error. Please check your connection.";
   }
@@ -336,7 +337,6 @@ form.addEventListener("submit", async function(e) {
   button.textContent = originalText;
   button.style.opacity = "1";
 });
-
 </script>
 
 </body>
